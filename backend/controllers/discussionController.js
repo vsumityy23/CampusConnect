@@ -1,3 +1,4 @@
+// backend/controllers/discussionController.js
 const Comment = require("../models/Comment");
 const Feedback = require("../models/Feedback");
 const Course = require("../models/Course");
@@ -42,6 +43,16 @@ exports.postComment = async (req, res) => {
         populate: { path: "user", select: "role username name" }
       });
       
+    // ==========================================
+    // NEW: SOCKET.IO BROADCAST LOGIC
+    // ==========================================
+    const io = req.app.get("io");
+    if (io) {
+      // Broadcast the populated comment to everyone in this specific session's room
+      io.to(req.params.sessionId).emit("receive_message", populatedComment);
+    }
+    // ==========================================
+
     res.status(201).json(populatedComment);
   } catch (err) {
     res.status(500).json({ msg: "Server error posting comment" });
@@ -78,6 +89,8 @@ exports.checkFeedbackStatus = async (req, res) => {
     res.status(500).json({ msg: "Server error checking feedback status" });
   }
 };
+
+// --- ANALYTICS ---
 exports.getCourseAnalytics = async (req, res) => {
   try {
     const feedbacks = await Feedback.find({ course: req.params.courseId }).populate("session", "date");

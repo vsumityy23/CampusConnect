@@ -3,19 +3,47 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const http = require("http"); // <-- NEW: Required for Socket.io
+const { Server } = require("socket.io"); // <-- NEW: Required for Socket.io
 
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const courseRoutes = require("./routes/courseRoutes");
-
 const discussionRoutes = require("./routes/discussionRoutes");
-
-
-
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// ==========================================
+// 1. SOCKET.IO SERVER SETUP
+// ==========================================
+const server = http.createServer(app); // Wrap the express app
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Allow Vite frontend to connect during development
+    methods: ["GET", "POST", "PUT", "DELETE"]
+  }
+});
+
+// Make the 'io' instance available in all your controllers (req.app.get("io"))
+app.set("io", io);
+
+// Handle WebSockets connections
+io.on("connection", (socket) => {
+  console.log(`Socket Connected: ${socket.id}`);
+
+  // When frontend triggers 'join_room', put this socket into that specific session's room
+  socket.on("join_room", (sessionId) => {
+    socket.join(sessionId);
+    console.log(`Socket ${socket.id} joined room: ${sessionId}`);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`Socket Disconnected: ${socket.id}`);
+  });
+});
+// ==========================================
 
 const PORT = process.env.PORT || 5000;
 
@@ -26,14 +54,19 @@ mongoose
     console.error("MongoDB connection error:", err.message);
     process.exit(1);
   });
+
+// Routes
 app.use("/api/projects", require("./routes/projectRoutes"));
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use('/api/forum', require('./routes/forumRoutes'));
 app.use("/api/courses", courseRoutes);
-app.use("/api/engage",discussionRoutes)
+app.use("/api/engage", discussionRoutes);
 app.use('/api/users', require('./routes/userRoutes'));
 
 app.get("/", (req, res) => res.send("CampusConnect backend running"));
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// ==========================================
+// 2. START THE WRAPPED SERVER (Not app.listen!)
+// ==========================================
+server.listen(PORT, () => console.log(`Server & Sockets running on port ${PORT}`));

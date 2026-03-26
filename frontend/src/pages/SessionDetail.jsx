@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import DashboardLayout from "../layouts/dashboard_layout";
+import { io } from "socket.io-client"; // <-- NEW IMPORT
 import {
   Send,
   ArrowLeft,
@@ -32,7 +33,6 @@ export default function SessionDetail() {
   const messagesEndRef = useRef(null);
   const prevCountRef = useRef(0);
 
-  // Safely grab the current user ID (Handles both 'id' and '_id' variations)
   const currentUser = JSON.parse(localStorage.getItem("user")) || {};
   const currentUserId = currentUser.id || currentUser._id;
   const isStudent = currentUser.role === "Student";
@@ -61,20 +61,38 @@ export default function SessionDetail() {
     }
   }, [sessionId, isStudent]);
 
-  const fetchComments = () => {
+  // Initial Fetch (Gets chat history when opening the page)
+  useEffect(() => {
     fetch(`${API_BASE}/api/engage/session/${sessionId}/comments`, {
       headers: getHeaders(),
     })
       .then((res) => res.json())
       .then((data) => setComments(data))
       .catch((err) => console.error(err));
-  };
-
-  useEffect(() => {
-    fetchComments();
-    const intervalId = setInterval(fetchComments, 3000);
-    return () => clearInterval(intervalId);
   }, [sessionId]);
+
+  // --- NEW REAL-TIME SOCKET LOGIC ---
+  useEffect(() => {
+    const socket = io(API_BASE);
+
+    // Tell the server to put us in a room specific to this class session
+    socket.emit("join_room", sessionId);
+
+    // Listen for messages pushed by the server
+    socket.on("receive_message", (newMsg) => {
+      setComments((prev) => {
+        // Prevent duplicate renders if the sender already added it to their own screen
+        if (prev.some((comment) => comment._id === newMsg._id)) return prev;
+        return [...prev, newMsg];
+      });
+    });
+
+    // Cleanup when leaving the page
+    return () => {
+      socket.disconnect();
+    };
+  }, [sessionId]);
+  // ----------------------------------
 
   useEffect(() => {
     if (comments.length > prevCountRef.current) {
@@ -103,7 +121,9 @@ export default function SessionDetail() {
         },
       );
       const data = await res.json();
-      setComments([...comments, data]);
+
+      // Add instantly for the sender for zero-latency feel
+     
       setNewComment("");
       setReplyingTo(null);
     } catch (err) {
@@ -198,7 +218,6 @@ export default function SessionDetail() {
                 </div>
               ) : (
                 comments.map((msg) => {
-                  // BULLETPROOF IDENTITY CHECK
                   const msgUserId = msg.user?._id || msg.user;
                   const isMe = Boolean(
                     currentUserId &&
@@ -247,7 +266,6 @@ export default function SessionDetail() {
                           <div
                             className={`max-w-md p-3 rounded-2xl text-sm font-medium shadow-sm relative ${bubbleBg}`}
                           >
-                            {/* BULLETPROOF REPLY BLOCK */}
                             {msg.replyTo && msg.replyTo.user && (
                               <div
                                 className={`p-2 rounded-lg mb-2 text-[11px] ${quotedBg}`}
