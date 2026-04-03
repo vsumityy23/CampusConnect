@@ -81,9 +81,15 @@ app.use('/api/users', require('./routes/userRoutes'));
 
 const path = require("path");
 
+// Serve static files FIRST
+// Serve static files FIRST
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-app.use((req, res) => {
+// Fallback for React routes (NO "*")
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api") || req.path.includes(".")) {
+    return next();
+  }
   res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
 });
 
