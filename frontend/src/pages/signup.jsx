@@ -507,7 +507,7 @@ function Signup() {
               {role === "Student" && (
                 <div>
                   <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-2">
-                    Username
+                    Anonymous Name
                   </label>
                   <div className="relative">
                     <div

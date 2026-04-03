@@ -359,7 +359,7 @@ function DashboardLayout({ children }) {
                   >
                     <div>
                       <label className="block text-[11px] font-black text-slate-400 uppercase mb-2 ml-1">
-                        New {role === "Student" ? "Username" : "Name"}
+                        New {role === "Student" ? "Anonymous Name" : "Name"}
                       </label>
                       <input
                         type="text"

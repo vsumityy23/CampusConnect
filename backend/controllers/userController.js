@@ -73,7 +73,7 @@ exports.deleteAccount = async (req, res) => {
       return res.status(400).json({ msg: "Incorrect password. Deletion denied." });
     }
 
-    // Step 1: Delete temporary/active data (We don't need dead applications)
+    // Step 1: Delete temporary/active data
     if (user.role === "Student") {
       await Application.deleteMany({ student: user._id });
       await Feedback.deleteMany({ student: user._id });
@@ -87,19 +87,24 @@ exports.deleteAccount = async (req, res) => {
       await Course.deleteMany({ professor: user._id });
     }
 
-    // Step 2: Anonymize the User (Do NOT touch ForumPost or ForumComment!)
-    // We scramble their credentials so they are permanently locked out, 
-    // but their ID remains to keep the forum and chat history intact.
+    // Step 2: Anonymize the User
+    // We use their already-anonymous username to guarantee uniqueness for the DB
+    // and keep their ghost identity continuous on old forum posts.
     
-    user.email = `deleted_${Date.now()}@system.local`; // Free up their original IITK email
-    user.password = await bcrypt.hash(Date.now().toString(), 10); // Unknowable password
+    // Free up their original email, using the username to keep this unique too
+    user.email = `deleted_${user.username}@system.local`; 
+    
+    // Lock them out with a completely random, unknowable hash
+    user.password = await bcrypt.hash(Math.random().toString(), 10); 
     user.name = "[Deleted User]";
-    user.username = "[deleted]";
+    
+    // Simply prepend 'deleted_' to their existing anonymous handle
+    user.username = `deleted_${user.username}`; 
     
     // Save the ghosted user back to the database
     await user.save();
 
-    res.json({ msg: "Account securely anonymized. Public posts remain as [Deleted User]." });
+    res.json({ msg: `Account securely anonymized. Public posts remain as ${user.username}.` });
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error during account deletion." });
