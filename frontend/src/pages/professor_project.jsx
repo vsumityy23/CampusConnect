@@ -2,7 +2,7 @@ import DashboardLayout from "../layouts/dashboard_layout.jsx";
 import { useState, useEffect } from "react";
 import { Check, X } from "lucide-react";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 function ProfessorProject() {
   const [projects, setProjects] = useState([]);

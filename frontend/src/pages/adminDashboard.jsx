@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShieldCheck, Plus, CheckCircle2, AlertCircle, Loader2, LogOut } from "lucide-react";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
