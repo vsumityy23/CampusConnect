@@ -25,7 +25,6 @@ function Projects() {
     branch: "",
     cpi: "",
     resume: "",
-    sop: "",
   });
 
   const getHeaders = () => ({
@@ -89,7 +88,6 @@ function Projects() {
         branch: "",
         cpi: "",
         resume: "",
-        sop: "",
       });
     } catch (err) {
       alert(err.message);
@@ -188,7 +186,7 @@ function Projects() {
                       onClick={() => setSelectedProject(project)}
                       className="w-full bg-slate-900 hover:bg-indigo-600 text-white py-3 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
                     >
-                      <Briefcase size={18} /> Review & Apply
+                      <Briefcase size={18} /> Apply
                     </button>
                   )}
                 </div>
@@ -324,22 +322,6 @@ function Projects() {
                     }
                     placeholder="https://..."
                     className="w-full p-3 bg-slate-50 border-2 border-slate-200 rounded-xl outline-none focus:border-indigo-500 text-sm font-bold"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-black text-slate-500 mb-2 uppercase">
-                    Statement of Purpose
-                  </label>
-                  <textarea
-                    name="sop"
-                    value={applicationForm.sop}
-                    onChange={(e) =>
-                      setApplicationForm({
-                        ...applicationForm,
-                        sop: e.target.value,
-                      })
-                    }
-                    className="w-full p-3 bg-slate-50 border-2 border-slate-200 rounded-xl outline-none focus:border-indigo-500 resize-none h-24 text-sm font-medium"
                   />
                 </div>
 

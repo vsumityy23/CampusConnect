@@ -286,26 +286,8 @@ function Signup() {
           </div>
 
           <div className="flex items-center gap-4 mt-auto pt-10">
-            <div className="flex -space-x-4">
-              <img
-                className="w-12 h-12 rounded-full border-4 border-slate-900"
-                src="https://ui-avatars.com/api/?name=Alex&background=4f46e5&color=fff"
-                alt="User"
-              />
-              <img
-                className="w-12 h-12 rounded-full border-4 border-slate-900"
-                src="https://ui-avatars.com/api/?name=Sarah&background=10b981&color=fff"
-                alt="User"
-              />
-              <img
-                className="w-12 h-12 rounded-full border-4 border-slate-900"
-                src="https://ui-avatars.com/api/?name=David&background=f59e0b&color=fff"
-                alt="User"
-              />
-            </div>
-            <div className="text-sm font-bold text-slate-300">
-              Join <span className="text-white">5,000+</span> active members
-            </div>
+          
+
           </div>
         </div>
       </div>

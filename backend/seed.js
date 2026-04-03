@@ -1,5 +1,3 @@
-
-// backend/seed.js
 require("dotenv").config();
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
@@ -19,48 +17,73 @@ const rawProfessors = [
 ];
 
 const rawStudents = [
-  { email: "likhithal23@iitk.ac.in", username: "likhitha_23" },
-  { email: "omsingh21@iitk.ac.in", username: "om_21" },
-  { email: "preetid23@iitk.ac.in", username: "preeti_23" },
-  { email: "aayusha23@iitk.ac.in", username: "aayusha_23" },
-  { email: "aayushd23@iitk.ac.in", username: "aayushd_23" },
-  { email: "abhirupg23@iitk.ac.in", username: "abhirup_23" },
-  { email: "btirlangi23@iitk.ac.in", username: "badrinath_23" },
-  { email: "adityakv23@iitk.ac.in", username: "adityak_23" },
-  { email: "adityamane23@iitk.ac.in", username: "adityam_23" },
-  { email: "adityapr23@iitk.ac.in", username: "adityap_23" },
-  { email: "aswaaiitp23@iitk.ac.in", username: "adwaaiit_23" },
-  { email: "adyansub23@iitk.ac.in", username: "adyansu_23" },
-  { email: "ahermukund23@iitk.ac.in", username: "mukund_23" },
-  { email: "akash23@iitk.ac.in", username: "akash_23" },
-  { email: "pratyushks23@iitk.ac.in", username: "pratyush_23" },
-  { email: "akshatsh23@iitk.ac.in", username: "akshatsh_23" },
-  { email: "akshatsing23@iitk.ac.in", username: "akshatsi_23" },
-  { email: "ssharma22@iitk.ac.in", username: "sudhanshu_22" },
-  { email: "akulag23@iitk.ac.in", username: "akul_23" },
-  { email: "amankumar23@iitk.ac.in", username: "amank_23" },
-  { email: "amanmaloo23@iitk.ac.in", username: "amanm_23" },
-  { email: "amanu23@iitk.ac.in", username: "amanu_23" },
-  { email: "ameerzaman23@iitk.ac.in", username: "ameer_23" },
-  { email: "ananyaki23@iitk.ac.in", username: "ananya_23" },
-  { email: "anirvant23@iitk.ac.in", username: "anirvan_23" },
-  { email: "spratyush23@iitk.ac.in", username: "spratyushs_23" },
-  { email: "anujag23@iitk.ac.in", username: "anuj_23" },
-  { email: "anupamap23@iitk.ac.in", username: "anupama_23" }
+  { email: "likhithal23@iitk.ac.in", username: "devil" },
+  { email: "omsingh21@iitk.ac.in", username: "hero" },
+  { email: "preetid23@iitk.ac.in", username: "sher" },
+  { email: "aayusha23@iitk.ac.in", username: "sawasher" },
+  { email: "aayushd23@iitk.ac.in", username: "rehman" },
+  { email: "abhirupg23@iitk.ac.in", username: "hamza" },
+  { email: "btirlangi23@iitk.ac.in", username: "tiger" },
+  { email: "adityakv23@iitk.ac.in", username: "lion" },
+  { email: "adityamane23@iitk.ac.in", username: "notfound" },
+  { email: "adityapr23@iitk.ac.in", username: "dhurandhar" },
+  { email: "aswaaiitp23@iitk.ac.in", username: "angelpriya" },
+  { email: "adyansub23@iitk.ac.in", username: "shift" },
+  { email: "ahermukund23@iitk.ac.in", username: "swift" },
+  { email: "akash23@iitk.ac.in", username: "ferrari" },
+  { email: "pratyushks23@iitk.ac.in", username: "lambo" },
+  { email: "akshatsh23@iitk.ac.in", username: "maruti" },
+  { email: "akshatsing23@iitk.ac.in", username: "yoyo" },
+  { email: "ssharma22@iitk.ac.in", username: "badshah" },
+  { email: "akulag23@iitk.ac.in", username: "cheeta" },
+  { email: "amankumar23@iitk.ac.in", username: "xaiver" },
+  { email: "amanmaloo23@iitk.ac.in", username: "liger" },
+  { email: "amanu23@iitk.ac.in", username: "omini" },
+  { email: "ameerzaman23@iitk.ac.in", username: "amex" },
+  { email: "ananyaki23@iitk.ac.in", username: "tower" },
+  { email: "anirvant23@iitk.ac.in", username: "trexx" },
+  { email: "spratyush23@iitk.ac.in", username: "sallu" },
+  { email: "anujag23@iitk.ac.in", username: "fox" },
+  { email: "anupamap23@iitk.ac.in", username: "shera" }
 ];
 
-// --- 2. HELPER FUNCTIONS ---
+// --- PASSWORD MAP FOR STUDENTS ---
+const studentPasswordMap = {
+  "likhithal23@iitk.ac.in": "Likhitha123.",
+  "omsingh21@iitk.ac.in": "Om123.",
+  "preetid23@iitk.ac.in": "Preeti123.",
+  "aayusha23@iitk.ac.in": "Aayusha123.",
+  "aayushd23@iitk.ac.in": "Aayushd123.",
+  "abhirupg23@iitk.ac.in": "Abhirup123.",
+  "btirlangi23@iitk.ac.in": "Badrinath123.",
+  "adityakv23@iitk.ac.in": "Adityak123.",
+  "adityamane23@iitk.ac.in": "Adityam123.",
+  "adityapr23@iitk.ac.in": "Adityap123.",
+  "aswaaiitp23@iitk.ac.in": "Adwaaiit123.",
+  "adyansub23@iitk.ac.in": "Adyansu123.",
+  "ahermukund23@iitk.ac.in": "Mukund123.",
+  "akash23@iitk.ac.in": "Akash123.",
+  "pratyushks23@iitk.ac.in": "Pratyush123.",
+  "akshatsh23@iitk.ac.in": "Akshatsh123.",
+  "akshatsing23@iitk.ac.in": "Akshatsi123.",
+  "ssharma22@iitk.ac.in": "Sudhanshu123.",
+  "akulag23@iitk.ac.in": "Akul123.",
+  "amankumar23@iitk.ac.in": "Amank123.",
+  "amanmaloo23@iitk.ac.in": "Amanm123.",
+  "amanu23@iitk.ac.in": "Amanu123.",
+  "ameerzaman23@iitk.ac.in": "Ameer123.",
+  "ananyaki23@iitk.ac.in": "Ananya123.",
+  "anirvant23@iitk.ac.in": "Anirvan123.",
+  "spratyush23@iitk.ac.in": "Spratyushs123.",
+  "anujag23@iitk.ac.in": "Anuj123.",
+  "anupamap23@iitk.ac.in": "Anupama123."
+};
 
-// Password from NAME (for professors)
+// --- HELPER FUNCTIONS ---
+
 const generatePasswordFromName = (fullName) => {
   const firstName = fullName.split(" ")[0].toLowerCase();
   return firstName.charAt(0).toUpperCase() + firstName.slice(1) + "123.";
-};
-
-// Password from USERNAME (for students)
-const generatePasswordFromUsername = (username) => {
-  const base = username.split("_")[0];
-  return base.charAt(0).toUpperCase() + base.slice(1) + "123.";
 };
 
 async function seedDatabase() {
@@ -69,7 +92,6 @@ async function seedDatabase() {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ Connected to MongoDB!");
 
-    // Combine users
     const allUsers = [
       ...rawProfessors.map((p, i) => ({
         email: p.email,
@@ -93,7 +115,11 @@ async function seedDatabase() {
         if (user.role === "Professor") {
           plainPassword = generatePasswordFromName(user.name);
         } else {
-          plainPassword = generatePasswordFromUsername(user.username);
+          plainPassword = studentPasswordMap[user.email];
+
+          if (!plainPassword) {
+            throw new Error(`No password found for ${user.email}`);
+          }
         }
 
         const hashedPassword = await bcrypt.hash(plainPassword, 10);
@@ -111,14 +137,17 @@ async function seedDatabase() {
     // Clear old data
     console.log("⏳ Clearing old seed data...");
     const emails = usersToInsert.map((u) => u.email);
+
     await User.deleteMany({ email: { $in: emails } });
     await Professor.deleteMany({
       email: { $in: rawProfessors.map((p) => p.email) }
     });
 
-    // Insert
+    // Insert new data
     console.log("⏳ Inserting Users and Professor Whitelist...");
+
     await User.insertMany(usersToInsert);
+
     await Professor.insertMany(
       rawProfessors.map((p) => ({
         email: p.email,
@@ -146,4 +175,3 @@ async function seedDatabase() {
 }
 
 seedDatabase();
-

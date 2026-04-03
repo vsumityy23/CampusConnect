@@ -8,7 +8,6 @@ const applicationSchema = new mongoose.Schema({
   branch: { type: String, required: true },
   cpi: { type: Number, required: true },
   resume: { type: String, required: true }, // URL to resume
-  sop: { type: String },
   status: { type: String, enum: ["Pending", "Accepted", "Rejected"], default: "Pending" }
 }, { timestamps: true });
 
