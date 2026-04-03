@@ -12,10 +12,22 @@ const courseRoutes = require("./routes/courseRoutes");
 const discussionRoutes = require("./routes/discussionRoutes");
 
 const app = express();
+const allowedOrigins = [
+  "http://172.27.16.252",
+  "http://localhost:5173", // for dev
+];
+
 app.use(cors({
-  origin: true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
+
 app.use(express.json());
 
 // ==========================================
@@ -24,7 +36,7 @@ app.use(express.json());
 const server = http.createServer(app); // Wrap the express app
 const io = new Server(server, {
   cors: {
-    origin: "*", // Allow Vite frontend to connect during development
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"]
   }
 });
@@ -67,7 +79,13 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/engage", discussionRoutes);
 app.use('/api/users', require('./routes/userRoutes'));
 
-app.get("/", (req, res) => res.send("CampusConnect backend running"));
+const path = require("path");
+
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+app.use((req, res) => {
+  res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
+});
 
 // ==========================================
 // 2. START THE WRAPPED SERVER (Not app.listen!)
