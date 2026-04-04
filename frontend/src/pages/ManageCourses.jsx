@@ -205,51 +205,51 @@ export default function ManageCourses() {
 
   return (
     <DashboardLayout>
-      <div className="min-h-[calc(100vh-5rem)] font-sans relative">
+      <div className="min-h-[calc(100vh-5rem)] font-sans relative px-4 sm:px-6">
         {toast && (
           <div
-            className={`fixed top-6 right-6 z-[100] flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl border animate-in slide-in-from-top-4 fade-in duration-300 ${toast.type === "error" ? "bg-red-50 border-red-200 text-red-800" : "bg-emerald-50 border-emerald-200 text-emerald-800"}`}
+            className={`fixed top-6 right-4 sm:right-6 z-[100] flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 rounded-lg sm:rounded-2xl shadow-2xl border animate-in slide-in-from-top-4 fade-in duration-300 text-xs sm:text-sm ${toast.type === "error" ? "bg-red-50 border-red-200 text-red-800" : "bg-emerald-50 border-emerald-200 text-emerald-800"}`}
           >
             {toast.type === "error" ? (
-              <AlertCircle size={20} />
+              <AlertCircle size={18} className="flex-shrink-0" />
             ) : (
-              <CheckCircle2 size={20} />
+              <CheckCircle2 size={18} className="flex-shrink-0" />
             )}
-            <p className="text-sm font-bold">{toast.msg}</p>
+            <p className="font-bold truncate">{toast.msg}</p>
           </div>
         )}
 
         <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 animate-in fade-in duration-500">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
-              <BookOpen className="text-indigo-600" size={32} />
-              Course Management
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+              <BookOpen className="text-indigo-600 flex-shrink-0" size={26} />
+              <span>Course Management</span>
             </h1>
-            <p className="text-slate-500 font-medium mt-1 ml-11">
+            <p className="text-slate-500 font-medium mt-1 ml-0 sm:ml-10 text-sm sm:text-base">
               Create, configure, and manage your class rosters.
             </p>
           </div>
           {!selectedCourse && (
             <button
               onClick={() => setShowCreate(true)}
-              className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg flex items-center gap-2 active:scale-95"
+              className="bg-slate-900 hover:bg-slate-800 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold transition-all shadow-lg flex items-center justify-center sm:justify-start gap-2 active:scale-95 text-sm sm:text-base w-full sm:w-auto"
             >
-              <Plus size={18} strokeWidth={3} /> New Course
+              <Plus size={16} strokeWidth={3} /> New Course
             </button>
           )}
         </div>
 
         {!selectedCourse && (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {courses.length === 0 && (
-              <div className="col-span-full py-24 flex flex-col items-center justify-center text-center bg-white rounded-3xl border border-dashed border-slate-300">
-                <BookOpen size={40} className="text-indigo-500 mb-4" />
-                <h3 className="text-xl font-bold text-slate-900">
+              <div className="col-span-full py-16 sm:py-24 flex flex-col items-center justify-center text-center bg-white rounded-2xl sm:rounded-3xl border border-dashed border-slate-300">
+                <BookOpen size={32} className="text-indigo-500 mb-4" />
+                <h3 className="text-lg sm:text-xl font-bold text-slate-900">
                   No courses yet
                 </h3>
                 <button
                   onClick={() => setShowCreate(true)}
-                  className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold"
+                  className="bg-indigo-600 text-white px-5 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold mt-4 text-sm sm:text-base"
                 >
                   Create First Course
                 </button>
@@ -259,37 +259,37 @@ export default function ManageCourses() {
               <div
                 key={c._id}
                 onClick={() => setSelectedCourse(c)}
-                className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-indigo-300 cursor-pointer transition-all overflow-hidden group flex flex-col"
+                className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-indigo-300 cursor-pointer transition-all overflow-hidden group flex flex-col"
               >
                 <div className="h-2 bg-gradient-to-r from-indigo-500 to-purple-500 w-full"></div>
-                <div className="p-6 flex-1 flex flex-col">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-extrabold text-slate-900 line-clamp-1">
+                <div className="p-4 sm:p-6 flex-1 flex flex-col">
+                  <div className="flex justify-between items-start mb-4 gap-2">
+                    <h3 className="text-base sm:text-lg font-extrabold text-slate-900 line-clamp-1 flex-1">
                       {c.name}
                     </h3>
                     <button
                       onClick={(e) => handleDelete(e, c._id)}
-                      className="text-slate-300 hover:text-red-500 p-2 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                      className="text-slate-300 hover:text-red-500 p-1.5 rounded-lg transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
                     >
-                      <Trash2 size={18} />
+                      <Trash2 size={16} />
                     </button>
                   </div>
-                  <div className="space-y-3 mt-auto">
-                    <div className="flex items-center gap-3 text-sm text-slate-600 font-medium">
-                      <Users size={16} /> {c.students.length} Enrolled Members
+                  <div className="space-y-2 mt-auto text-xs sm:text-sm">
+                    <div className="flex items-center gap-2 text-slate-600 font-medium">
+                      <Users size={14} /> {c.students.length} Enrolled
                     </div>
-                    <div className="flex items-center gap-3 text-sm text-slate-600 font-medium">
-                      <Calendar size={16} />{" "}
+                    <div className="flex items-center gap-2 text-slate-600 font-medium">
+                      <Calendar size={14} />
                       <span className="truncate">
                         {c.daysOfWeek.join(", ")}
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="bg-slate-50 px-6 py-3 border-t border-slate-100 flex justify-between items-center text-sm font-bold text-indigo-600 group-hover:bg-indigo-50 transition-colors">
-                  Manage Course{" "}
+                <div className="bg-slate-50 px-4 sm:px-6 py-2 sm:py-3 border-t border-slate-100 flex justify-between items-center text-xs sm:text-sm font-bold text-indigo-600 group-hover:bg-indigo-50 transition-colors">
+                  Manage
                   <ChevronRight
-                    size={16}
+                    size={14}
                     className="group-hover:translate-x-1 transition-transform"
                   />
                 </div>
@@ -305,36 +305,36 @@ export default function ManageCourses() {
                 setSelectedCourse(null);
                 setUploadSummary(null);
               }}
-              className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-bold mb-6 group transition-colors"
+              className="flex items-center gap-2 text-slate-500 hover:text-indigo-600 font-bold mb-4 sm:mb-6 group transition-colors text-sm sm:text-base"
             >
-              <div className="p-1.5 rounded-lg bg-white border border-slate-200 group-hover:border-indigo-200 shadow-sm">
-                <ArrowLeft size={16} />
+              <div className="p-1.5 rounded-lg bg-white border border-slate-200 group-hover:border-indigo-200 shadow-sm flex-shrink-0">
+                <ArrowLeft size={14} />
               </div>
               Back to all courses
             </button>
 
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-8 flex flex-col lg:flex-row justify-between lg:items-center gap-4 relative overflow-hidden">
+            <div className="bg-white rounded-lg sm:rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 mb-6 sm:mb-8 flex flex-col lg:flex-row justify-between lg:items-center gap-4 relative overflow-hidden">
               <div className="relative z-10">
-                <h2 className="text-3xl font-extrabold text-slate-900 mb-2">
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">
                   {selectedCourse.name}
                 </h2>
-                <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-slate-500">
-                  <span className="flex items-center gap-1.5">
-                    <Calendar size={16} className="text-indigo-500" />{" "}
+                <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm font-medium text-slate-500">
+                  <span className="flex items-center gap-1.5 flex-shrink-0">
+                    <Calendar size={14} className="text-indigo-500" />{" "}
                     {new Date(selectedCourse.startDate).toLocaleDateString()} —{" "}
                     {new Date(selectedCourse.endDate).toLocaleDateString()}
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <Users size={16} className="text-emerald-500" />{" "}
+                  <span className="flex items-center gap-1.5 flex-shrink-0">
+                    <Users size={14} className="text-emerald-500" />{" "}
                     {selectedCourse.students.length} Enrolled
                   </span>
                 </div>
               </div>
-              <div className="relative z-10 flex flex-wrap gap-2">
+              <div className="relative z-10 flex flex-wrap gap-1.5 sm:gap-2">
                 {selectedCourse.daysOfWeek.map((d) => (
                   <span
                     key={d}
-                    className="px-3 py-1 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold uppercase tracking-wider"
+                    className="px-2 sm:px-3 py-0.5 sm:py-1 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold uppercase tracking-wider"
                   >
                     {d.slice(0, 3)}
                   </span>
@@ -342,7 +342,7 @@ export default function ManageCourses() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
               <div className="space-y-6">
                 {/* MANUAL ADD */}
                 <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">

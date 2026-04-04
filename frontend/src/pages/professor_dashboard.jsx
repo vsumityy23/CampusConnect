@@ -122,30 +122,36 @@ export default function ProfessorDashboard() {
 
   return (
     <DashboardLayout>
-      <div className="min-h-[calc(100vh-5rem)] font-sans relative pb-10">
-        <div className="mb-10 animate-in fade-in">
-          <h1 className="text-4xl font-black text-slate-900 tracking-tighter flex items-center gap-4">
-            <div className="p-3 bg-indigo-600 rounded-2xl text-white shadow-xl shadow-indigo-200">
-              <BarChart3 size={32} strokeWidth={2.5} />
+      <div className="min-h-[calc(100vh-5rem)] font-sans relative pb-10 px-0">
+        <div className="mb-8 sm:mb-10 animate-in fade-in px-4 sm:px-6">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tighter flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+            <div className="p-2 sm:p-3 bg-indigo-600 rounded-xl sm:rounded-2xl text-white shadow-xl shadow-indigo-200 flex-shrink-0">
+              <BarChart3 size={24} strokeWidth={2.5} />
             </div>
-            Course Analytics & Insights
+            <span>Course Analytics & Insights</span>
           </h1>
-          <p className="text-slate-500 font-medium mt-3 ml-2 text-lg">
+          <p className="text-slate-500 font-medium mt-2 sm:mt-3 ml-0 sm:ml-14 text-sm sm:text-base">
             Process and visualize anonymous student feedback data.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-6">
           {/* LEFT: CHARTS */}
-          <div className="xl:col-span-2 space-y-8 animate-in slide-in-from-bottom-4">
-            <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm">
-              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">
+          <div className="xl:col-span-2 space-y-6 sm:space-y-8 animate-in slide-in-from-bottom-4">
+            <div className="bg-white p-4 sm:p-8 rounded-xl sm:rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden">
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 ml-1 text-[10px] sm:text-xs">
                 Select Active Course
               </label>
               <select
                 value={selectedCourse}
                 onChange={(e) => setSelectedCourse(e.target.value)}
-                className="w-full p-5 bg-slate-50 border-2 border-transparent rounded-[1.25rem] outline-none focus:border-indigo-500 font-black text-slate-800 shadow-inner appearance-none cursor-pointer"
+                className="w-full p-3 sm:p-5 bg-slate-50 border-2 border-transparent rounded-lg sm:rounded-[1.25rem] outline-none focus:border-indigo-500 font-black text-slate-800 shadow-inner appearance-none cursor-pointer text-sm sm:text-base"
+                style={{
+                  maxWidth: "100%",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap"
+                }}
               >
                 <option value="">-- Choose a Course to Analyze --</option>
                 {courses.map((c) => (
@@ -242,6 +248,15 @@ export default function ProfessorDashboard() {
           </div>
         </div>
       </div>
+      <style>{`
+        select {
+          position: relative;
+          z-index: 10;
+        }
+        select:focus {
+          outline: none;
+        }
+      `}</style>
     </DashboardLayout>
   );
 }

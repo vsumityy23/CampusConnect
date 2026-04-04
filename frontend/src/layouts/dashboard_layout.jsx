@@ -17,6 +17,7 @@ import {
   AlertCircle,
   CheckCircle2,
   AlertTriangle,
+  Menu,
 } from "lucide-react";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
@@ -27,6 +28,7 @@ function DashboardLayout({ children }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeDialog, setActiveDialog] = useState(null);
   const [toast, setToast] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   // Form States
@@ -202,8 +204,8 @@ function DashboardLayout({ children }) {
         </div>
       )}
 
-      {/* SIDEBAR */}
-      <aside className="w-72 bg-slate-900 text-slate-300 flex flex-col shadow-2xl shrink-0 z-20">
+      {/* SIDEBAR - Hidden on mobile, visible on md+ */}
+      <aside className="hidden md:flex md:w-72 bg-slate-900 text-slate-300 flex-col shadow-2xl shrink-0 z-20">
         <div className="p-6 mb-2 flex items-center gap-3">
           <div className="p-2.5 bg-indigo-600 rounded-xl text-white shadow-lg shadow-indigo-500/30">
             <GraduationCap size={26} strokeWidth={2.5} />
@@ -245,37 +247,116 @@ function DashboardLayout({ children }) {
         </div>
       </aside>
 
+      {/* MOBILE MENU OVERLAY - Visible only on mobile */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* MOBILE MENU SIDEBAR - Slides in from left on mobile */}
+      <aside
+        className={`fixed top-0 left-0 h-screen w-64 bg-slate-900 text-slate-300 flex flex-col shadow-2xl z-50 transition-transform duration-300 md:hidden ${
+          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="p-6 mb-2 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-indigo-600 rounded-xl text-white shadow-lg shadow-indigo-500/30">
+              <GraduationCap size={26} strokeWidth={2.5} />
+            </div>
+            <span className="text-xl font-black text-white tracking-tight truncate">
+              Campus<span className="text-indigo-400">Connect</span>
+            </span>
+          </div>
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-slate-400 hover:text-white"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        <nav className="flex-1 px-4 space-y-1 mt-4">
+          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4 mb-3">
+            Main Menu
+          </p>
+          {menu.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              onClick={() => setMobileMenuOpen(false)}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group border-2 ${isActive ? "bg-indigo-600 text-white border-white shadow-lg shadow-indigo-900/50" : "border-transparent hover:bg-slate-800 hover:text-white"}`
+              }
+            >
+              <span className="opacity-70 group-hover:opacity-100">
+                {item.icon}
+              </span>
+              <span className="font-medium">{item.name}</span>
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* BOTTOM SECTION: LOGOUT */}
+        <div className="p-4 border-t border-slate-800 mt-auto">
+          <button
+            onClick={() => {
+              handleLogout();
+              setMobileMenuOpen(false);
+            }}
+            className="flex items-center gap-3 w-full px-4 py-3 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all"
+          >
+            <LogOut size={20} />
+            <span className="font-medium">Sign Out</span>
+          </button>
+        </div>
+      </aside>
+
       {/* MAIN CONTENT AREA */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* TOP NAVBAR */}
-        <header className="relative z-50 h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
-              <LayoutDashboard size={20} />
+        {/* TOP NAVBAR - Responsive */}
+        <header className="relative z-50 h-16 sm:h-20 bg-white border-b border-slate-200 flex items-center justify-between px-3 sm:px-6 lg:px-8 shrink-0 gap-2">
+          {/* LEFT: Hamburger Menu & Logo */}
+          <div className="flex items-center gap-2 min-w-0">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0"
+            >
+              <Menu size={20} />
+            </button>
+            {/* Campus Connect Logo - Visible on Mobile */}
+            <div className="md:hidden flex items-center gap-1.5 min-w-0">
+              <div className="p-1.5 bg-indigo-600 rounded-lg text-white flex-shrink-0">
+                <GraduationCap size={18} strokeWidth={2.5} />
+              </div>
+              <span className="text-sm font-black text-slate-900 tracking-tight truncate">
+                Campus<span className="text-indigo-600">Connect</span>
+              </span>
             </div>
-            <p className="text-xl font-black text-slate-800 tracking-tight">
-              Workspace
-            </p>
           </div>
 
-          <div className="flex items-center gap-4 relative" ref={dropdownRef}>
+          {/* RIGHT: User Menu - Always Visible */}
+          <div className="flex items-center gap-2 sm:gap-3 ml-auto relative" ref={dropdownRef}>
+            {/* User Info - Show on all screens */}
             <div className="text-right">
-              <p className="text-sm font-black text-slate-900 leading-none">
+              <p className="text-xs sm:text-sm font-black text-slate-900 leading-none line-clamp-1">
                 {displayName}
               </p>
-              <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mt-1">
+              <p className="text-[8px] sm:text-[10px] font-bold text-indigo-500 uppercase tracking-widest mt-0.5">
                 {role}
               </p>
             </div>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-lg hover:scale-105 active:scale-95 transition-all"
+              className="w-10 sm:w-12 h-10 sm:h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center font-black text-lg sm:text-xl shadow-lg hover:scale-105 active:scale-95 transition-all flex-shrink-0"
             >
               {initial}
             </button>
 
             {dropdownOpen && (
-              <div className="absolute top-16 right-0 w-64 bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 z-50 animate-in fade-in zoom-in-95">
+              <div className="absolute top-14 sm:top-16 right-0 w-48 sm:w-56 bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 z-[100] animate-in fade-in zoom-in-95 max-h-[60vh] overflow-y-auto">
                 <button
                   onClick={() => {
                     setActiveDialog("ID");
@@ -284,56 +365,55 @@ function DashboardLayout({ children }) {
                     );
                     setDropdownOpen(false);
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors whitespace-nowrap"
                 >
-                  <Settings size={18} className="text-slate-400" /> Update
-                  Profile
+                  <Settings size={16} className="text-slate-400 flex-shrink-0" /> Update Profile
                 </button>
                 <button
                   onClick={() => {
                     setActiveDialog("PWD");
                     setDropdownOpen(false);
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors whitespace-nowrap"
                 >
-                  <Lock size={18} className="text-slate-400" /> Change Password
+                  <Lock size={16} className="text-slate-400 flex-shrink-0" /> Change Password
                 </button>
                 <button
                   onClick={() => {
                     setActiveDialog("DEL");
                     setDropdownOpen(false);
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-xs sm:text-sm font-bold text-red-600 hover:bg-red-50 rounded-xl transition-colors whitespace-nowrap"
                 >
-                  <Trash2 size={18} className="text-red-400" /> Delete Account
+                  <Trash2 size={16} className="text-red-400 flex-shrink-0" /> Delete Account
                 </button>
 
                 {/* DROPDOWN LOGOUT */}
                 <div className="my-1 border-t border-slate-100"></div>
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors whitespace-nowrap"
                 >
-                  <LogOut size={18} className="text-slate-400" /> Sign Out
+                  <LogOut size={16} className="text-slate-400 flex-shrink-0" /> Sign Out
                 </button>
               </div>
             )}
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-8 relative">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8 relative">
           {children}
 
           {/* DIALOG MODALS */}
           {activeDialog && (
-            <div className="fixed inset-0 z-[300] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-              <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95">
+            <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 sm:p-6 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+              <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 max-h-[90vh] overflow-y-auto">
                 {/* Header changes color if we are confirming deletion */}
                 <div
                   className={`p-6 border-b flex justify-between items-center transition-colors ${showDeleteConfirm ? "bg-red-50 border-red-100" : "bg-slate-50/50 border-slate-100"}`}
                 >
                   <h3
-                    className={`font-black flex items-center gap-2 ${showDeleteConfirm ? "text-red-600" : "text-slate-900"}`}
+                    className={`font-black flex items-center gap-2 text-lg sm:text-xl ${showDeleteConfirm ? "text-red-600" : "text-slate-900"}`}
                   >
                     {showDeleteConfirm && <AlertTriangle size={20} />}
                     {activeDialog === "ID"
@@ -355,7 +435,7 @@ function DashboardLayout({ children }) {
                 {activeDialog === "ID" && (
                   <form
                     onSubmit={handleUpdateIdentity}
-                    className="p-8 space-y-6"
+                    className="p-6 sm:p-8 space-y-6"
                   >
                     <div>
                       <label className="block text-[11px] font-black text-slate-400 uppercase mb-2 ml-1">
@@ -383,7 +463,7 @@ function DashboardLayout({ children }) {
                 {activeDialog === "PWD" && (
                   <form
                     onSubmit={handleUpdatePassword}
-                    className="p-8 space-y-6"
+                    className="p-6 sm:p-8 space-y-6"
                   >
                     <input
                       type="password"
@@ -436,7 +516,7 @@ function DashboardLayout({ children }) {
                     /* Step 1: Enter Password */
                     <form
                       onSubmit={handleDeleteRequest}
-                      className="p-8 space-y-6 bg-red-50/20 animate-in fade-in"
+                      className="p-6 sm:p-8 space-y-6 bg-red-50/20 animate-in fade-in"
                     >
                       <p className="text-red-600 font-bold text-sm">
                         Caution: Wiping your account will remove all coursework,
@@ -464,11 +544,11 @@ function DashboardLayout({ children }) {
                     </form>
                   ) : (
                     /* Step 2: Custom Beautiful Confirmation Overlay */
-                    <div className="p-8 space-y-6 bg-red-50 text-center animate-in slide-in-from-right-8 duration-300">
+                    <div className="p-6 sm:p-8 space-y-6 bg-red-50 text-center animate-in slide-in-from-right-8 duration-300">
                       <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-2">
                         <AlertTriangle size={32} />
                       </div>
-                      <h4 className="text-2xl font-black text-slate-900 tracking-tight">
+                      <h4 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                         Are you absolutely sure?
                       </h4>
                       <p className="text-sm font-medium text-slate-600 leading-relaxed">
